@@ -1,0 +1,26 @@
+version: "3.8"
+services:
+  mysql_container:
+    container_name: mysqlcontainer
+    image: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - db:/var/lib/mysql
+  app:
+    container_name: "container_spring"
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - DATABASE_URL=jdbc:mysql://mysqlcontainer:3306/test?serverTimezone=UTC
+      - DATABASE_USERNAME=root
+      - DATABASE_PASSWORD=root
+      - MYSQL_DATABASE=test
+    depends_on:
+      - mysql_container
+volumes:
+  db:
+    external: true
